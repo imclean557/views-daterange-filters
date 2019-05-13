@@ -39,6 +39,12 @@ class ViewsDaterangeFiltersDateRange extends Date implements ContainerFactoryPlu
       'short' => $this->t('within'),
       'values' => 2,
     ];
+    $operators['ends_by'] = [
+      'title' => $this->t('Ends by'),
+      'method' => 'opEndsBy',
+      'short' => $this->t('Ends by'),
+      'values' => 1,
+    ];
 
     return $operators;
   }
@@ -91,6 +97,27 @@ class ViewsDaterangeFiltersDateRange extends Date implements ContainerFactoryPlu
     $field = $this->query->getDateFormat($this->query->getDateField($field, TRUE, $this->calculateOffset), $this->dateFormat, TRUE);
     $end_field = $this->query->getDateFormat($this->query->getDateField($end_field, TRUE, $this->calculateOffset), $this->dateFormat, TRUE);
     $this->query->addWhereExpression($this->options['group'], "$a <= $end_field AND $b >= $field");
+  }
+
+  /**
+   * Filters by operator Ends By.
+   *
+   * @param mixed $field
+   *   The field.
+   */
+  protected function opEndsBy($field) {
+    $end_field = substr($field, 0, -6) . '_end_value';
+
+    $timezone = $this->getTimezone();
+    $origin_offset = $this->getOffset($this->value['value'], $timezone);
+
+    // Convert to ISO. UTC timezone is used since dates are stored in UTC.
+    $value = new DateTimePlus($this->value['value'], new \DateTimeZone($timezone));
+    $value = $this->query->getDateFormat($this->query->getDateField("'" . $this->dateFormatter->format($value->getTimestamp() + $origin_offset, 'custom', DateTimeItemInterface::DATETIME_STORAGE_FORMAT, DateTimeItemInterface::STORAGE_TIMEZONE) . "'", TRUE, $this->calculateOffset), $this->dateFormat, TRUE);
+
+    $end_field = $this->query->getDateFormat($this->query->getDateField($end_field, TRUE, $this->calculateOffset), $this->dateFormat, TRUE);
+
+    $this->query->addWhereExpression($this->options['group'], "$end_field <= $value");
   }
 
 }
