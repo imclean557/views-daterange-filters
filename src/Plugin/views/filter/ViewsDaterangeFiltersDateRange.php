@@ -32,7 +32,7 @@ class ViewsDaterangeFiltersDateRange extends Date implements ContainerFactoryPlu
   }
   
   protected function opIncludes($field) {    
-    $start_field = substr($field, 0, -10) . '_value';
+    $end_field = substr($field, 0, -6) . '_end_value';
 
     $timezone = $this->getTimezone();
     $origin_offset = $this->getOffset($this->value['value'], $timezone);
@@ -42,10 +42,10 @@ class ViewsDaterangeFiltersDateRange extends Date implements ContainerFactoryPlu
     $value = $this->query->getDateFormat($this->query->getDateField("'" . $this->dateFormatter->format($value->getTimestamp() + $origin_offset, 'custom', DateTimeItemInterface::DATETIME_STORAGE_FORMAT, DateTimeItemInterface::STORAGE_TIMEZONE) . "'", TRUE, $this->calculateOffset), $this->dateFormat, TRUE);
     
     $field = $this->query->getDateFormat($this->query->getDateField($field, TRUE, $this->calculateOffset), $this->dateFormat, TRUE);
-    $start_field = $this->query->getDateFormat($this->query->getDateField($start_field, TRUE, $this->calculateOffset), $this->dateFormat, TRUE);
+    $end_field = $this->query->getDateFormat($this->query->getDateField($end_field, TRUE, $this->calculateOffset), $this->dateFormat, TRUE);
     
     // This is safe because we are manually scrubbing the value.   
-    $this->query->addWhereExpression($this->options['group'], "$value BETWEEN $start_field AND $field");
+    $this->query->addWhereExpression($this->options['group'], "$value BETWEEN $field AND $end_field");
   }
 
 }
