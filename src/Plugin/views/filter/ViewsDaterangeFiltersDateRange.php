@@ -44,7 +44,7 @@ class ViewsDaterangeFiltersDateRange extends Date implements ContainerFactoryPlu
   }
 
   /**
-   * Filters by operator includes.
+   * Filters by operator Includes.
    *
    * @param mixed $field
    *   The field.
@@ -66,7 +66,7 @@ class ViewsDaterangeFiltersDateRange extends Date implements ContainerFactoryPlu
   }
 
   /**
-   * Filters by operator within range.
+   * Filters by operator Overlaps.
    *
    * @param object $field
    *   The views field.
@@ -88,8 +88,6 @@ class ViewsDaterangeFiltersDateRange extends Date implements ContainerFactoryPlu
     $b = new DateTimePlus($this->value['max'], new \DateTimeZone($timezone));
     $b = $this->query->getDateFormat($this->query->getDateField("'" . $this->dateFormatter->format($b->getTimestamp() + $origin_offset, 'custom', DateTimeItemInterface::DATETIME_STORAGE_FORMAT, DateTimeItemInterface::STORAGE_TIMEZONE) . "'", TRUE, $this->calculateOffset), $this->dateFormat, TRUE);
 
-    // This is safe because we are manually scrubbing the values.
-    $operator = strtoupper($this->operator);
     $field = $this->query->getDateFormat($this->query->getDateField($field, TRUE, $this->calculateOffset), $this->dateFormat, TRUE);
     $end_field = $this->query->getDateFormat($this->query->getDateField($end_field, TRUE, $this->calculateOffset), $this->dateFormat, TRUE);
     $this->query->addWhereExpression($this->options['group'], "$a <= $end_field AND $b >= $field");
