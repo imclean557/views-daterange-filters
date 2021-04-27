@@ -10,8 +10,7 @@ use Drupal\datetime\Plugin\views\filter\Date;
 /**
  * Date/time views filter.
  *
- * Even thought dates are stored as strings, the numeric filter is extended
- * because it provides more sensible operators.
+ * Extend Date filter to include date range operations.
  *
  * @ingroup views_filter_handlers
  *
