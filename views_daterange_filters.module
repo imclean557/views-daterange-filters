@@ -8,7 +8,7 @@
 use Drupal\field\FieldStorageConfigInterface;
 
 /**
- * Implements hook_views_data_alter().
+ * Implements hook_field_views_data_alter().
  */
 function views_daterange_filters_field_views_data_alter(array &$data, FieldStorageConfigInterface $field_storage) {
   if ($field_storage->getType() === 'daterange') {
